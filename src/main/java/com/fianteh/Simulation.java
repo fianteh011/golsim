@@ -2,6 +2,9 @@ package com.fianteh;
 
 public class Simulation {
 
+    public static int DEAD = 0;
+    public static int ALIVE = 1;
+
     private int width;
 
     public int getWidth() {
@@ -30,7 +33,7 @@ public class Simulation {
             for (int x = 0; x < width; x++) {
                 //output some char to signal, if this cell is dead or alive
                 // 0 is dead
-                if (this.board[x][y] == 0) {
+                if (this.board[x][y] == DEAD) {
                     //dead
                     line.append(".");
                 } else {
@@ -47,11 +50,11 @@ public class Simulation {
     //two functions to set cellls alive or dead
 
     public void setAlive(int x, int y) {
-        this.setState(x, y, 1);
+        this.setState(x, y, ALIVE);
     }
 
     public void setDead(int x, int y) {
-        this.setState(x, y, 0);
+        this.setState(x, y, DEAD);
     }
 
     public void setState(int x, int y, int state){
@@ -92,11 +95,11 @@ public class Simulation {
     public int getState(int x, int y){
         //check if coordinates are valid
         if (x < 0 || x >= width) {
-            return 0; // cell is dead
+            return DEAD; // cell is dead
         }
 
         if (y < 0 || y >= height){
-            return 0;
+            return DEAD;
         }
 
         return this.board[x][y];
@@ -113,17 +116,17 @@ public class Simulation {
 
                 int aliveNeighbours = countAliveNeighbours(x, y);
                 //check CURRENT state of Board
-                if (getState(x, y) == 1) {
+                if (getState(x, y) == ALIVE) {
                     if (aliveNeighbours < 2) {
-                        newBoard[x][y] = 0;
+                        newBoard[x][y] = DEAD;
                     } else if (aliveNeighbours == 2 || aliveNeighbours == 3) {
-                        newBoard[x][y] = 1;
+                        newBoard[x][y] = ALIVE;
                     } else {
                         // 3 or more neighbours
-                        newBoard[x][y] = 0;
+                        newBoard[x][y] = DEAD;
                     }
                 } else {
-                    if (aliveNeighbours == 3) newBoard[x][y] = 1;
+                    if (aliveNeighbours == 3) newBoard[x][y] = ALIVE;
                 }
 
             }

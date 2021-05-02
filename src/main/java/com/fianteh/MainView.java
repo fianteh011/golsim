@@ -3,7 +3,6 @@ package com.fianteh;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,29 +19,30 @@ public class MainView extends VBox {
      * Affine to rearrange how things are displayed on the canvas
      */
 
-    private Button stepButton;
+//    private Button stepButton;
     private Canvas my_canvas;
+
     private Simulation simulation;
+
     private Affine affine; //allows things to be rearrange
 
-    private int drawMode = 1;
+    private int drawMode = Simulation.ALIVE;
 
 
     public MainView() {
-        this.stepButton = new Button("step");
-        this.stepButton.setOnAction(actionEvent -> {
-            simulation.step();
-            draw();
-        });
+
 
         //be able to change drawing mode
-        this.setOnKeyPressed(this::onKeyPressed);
-
 
         this.my_canvas = new Canvas(800, 800);
         this.my_canvas.setOnMousePressed(this::handleDraw);
         this.my_canvas.setOnMouseDragged(this::handleDraw);
-        this.getChildren().addAll(this.stepButton, this.my_canvas);
+
+        this.setOnKeyPressed(this::onKeyPressed);
+
+        Toolbar toolbar = new Toolbar(this);
+
+        this.getChildren().addAll(toolbar, this.my_canvas);
 
         this.affine = new Affine();
         this.affine.appendScale(800 / 20f, 800 / 20d);
@@ -51,11 +51,11 @@ public class MainView extends VBox {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.D){
-            this.drawMode = 1;
+        if (keyEvent.getCode() == KeyCode.D) {
+            this.drawMode = Simulation.ALIVE;
             System.out.println("Draw mode");
-        }else if (keyEvent.getCode() == KeyCode.E){
-            this.drawMode = 0;
+        } else if (keyEvent.getCode() == KeyCode.E) {
+            this.drawMode = Simulation.DEAD;
             System.out.println("Erase mode");
         }
     }
@@ -100,7 +100,7 @@ public class MainView extends VBox {
             for (int y = 0; y < this.simulation.getHeight(); y++) {
 
                 //draw a alive rectangle
-                if (this.simulation.getState(x, y) == 1) {
+                if (this.simulation.getState(x, y) == Simulation.ALIVE) {
                     g.fillRect(x, y, 1, 1);
 
                 }
@@ -122,5 +122,13 @@ public class MainView extends VBox {
         }
     }
 
+
+    public Simulation getSimulation() {
+        return this.simulation;
+    }
+
+    public void setDrawMode(int newDrawMode) {
+        this.drawMode = newDrawMode;
+    }
 
 }
